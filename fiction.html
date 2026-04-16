@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiction — Reading These Books</title>
+  <meta name="description" content="Fiction I'm reading and have read — novels, short stories, and the worlds worth getting lost in.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Reading These Books</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="fiction.html" class="active">Fiction</a></li>
+        <li><a href="nonfiction.html">Non-Fiction</a></li>
+        <li><a href="tips.html">Joel's Tips</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page-header container">
+      <span class="hero-eyebrow fade-up">Section 01</span>
+      <h1 class="fade-up delay-1">Fiction</h1>
+      <p class="fade-up delay-2">
+        Novels and stories I'm reading or have finished. Short notes on the synopsis and what
+        kept me turning pages.
+      </p>
+    </section>
+
+    <section class="section container">
+      <!--
+        ============================================================
+        BOOK CARD TEMPLATE — copy this block to add a new book
+        ============================================================
+        - Status badge class: "status-reading" / "status-finished" / "status-queued"
+        - Badge text: "Currently Reading" / "Finished" / "Up Next"
+        - Meta line: format (Ebook / Audiobook / Physical) · optional tier
+        ============================================================
+
+        <article class="book-card">
+          <div class="book-card-head">
+            <div class="book-title-block">
+              <h2 class="book-title">[Book Title]</h2>
+              <p class="book-author">by [Author Name]</p>
+              <p class="book-meta">[Format] · <span class="tier">[tier]</span></p>
+            </div>
+            <span class="status status-reading">Currently Reading</span>
+          </div>
+          <div class="book-section">
+            <h4>Synopsis</h4>
+            <p>[A short, spoiler-light summary.]</p>
+          </div>
+          <div class="book-section">
+            <h4>What I Like</h4>
+            <p>[What kept me reading, or what's stuck with me.]</p>
+          </div>
+        </article>
+      -->
+
+      <div class="grid">
+        <article class="book-card fade-up">
+          <div class="book-card-head">
+            <div class="book-title-block">
+              <h2 class="book-title">The Society of Unknowable Objects</h2>
+              <p class="book-author">by Gareth Brown</p>
+              <p class="book-meta">Ebook</p>
+            </div>
+            <span class="status status-reading">Currently Reading</span>
+          </div>
+          <p class="book-coming-soon">Notes coming soon — I'll add the synopsis and what I like once I'm further in.</p>
+        </article>
+
+        <article class="book-card fade-up delay-1">
+          <div class="book-card-head">
+            <div class="book-title-block">
+              <h2 class="book-title">The Book of Doors</h2>
+              <p class="book-author">by Gareth Brown</p>
+              <p class="book-meta">Ebook · <span class="tier">must-read</span></p>
+            </div>
+            <span class="status status-finished">Finished</span>
+          </div>
+          <div class="book-section">
+            <h4>Synopsis</h4>
+            <p>When Cassie discovers a mysterious book that grants the power to travel through any
+              door anywhere in the world, she's pulled into a hidden underground of magical book
+              collectors. As the stakes escalate and the people around her are threatened, she has
+              to navigate dangerous rivals, ancient secrets, and the seductive power of the books
+              themselves — a fast-paced blend of fantasy and thriller built around the irresistible
+              premise of books with magical abilities.</p>
+          </div>
+          <div class="book-section">
+            <h4>What I Like</h4>
+            <p class="book-placeholder">Adding my notes here soon.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>A public reading log by Joel · <a href="https://github.com/Jakayus/ReadingTheseBooks">View on GitHub</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
