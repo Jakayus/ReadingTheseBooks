@@ -443,29 +443,36 @@ main {
 }
 
 .book-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "cover status"
+    "cover title";
+  column-gap: 16px;
+  row-gap: 10px;
+  align-items: start;
 }
 
 .book-cover {
+  grid-area: cover;
   width: 80px;
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 6px;
-  flex-shrink: 0;
   background-color: var(--surface-2);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  align-self: start;
 }
 
 @media (max-width: 480px) {
-  .book-cover { width: 64px; }
+  .book-cover { width: 72px; }
 }
 
 .book-title-block {
+  grid-area: title;
   min-width: 0;
-  flex: 1;
+  align-self: start;
 }
 
 .book-title {
@@ -485,6 +492,9 @@ main {
 }
 
 .status {
+  grid-area: status;
+  justify-self: end;
+  align-self: start;
   display: inline-block;
   padding: 5px 12px;
   border-radius: 999px;
@@ -493,7 +503,14 @@ main {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
-  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .status {
+    padding: 4px 10px;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+  }
 }
 
 .status-reading {
