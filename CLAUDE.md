@@ -23,6 +23,21 @@ When the user says anything like **"enter new book, start questionnaire"**, **"a
 7. **Synopsis** — short summary of what the book is about. The user can type one out, paste from somewhere, or say "skip for now".
 8. **What I Like** — what kept them reading or what stuck with them. Same options: type, paste, or "skip for now".
 
+### Cover lookup (automatic, after the questionnaire)
+
+After all answers are collected, look up the book on Open Library to get a cover URL:
+
+1. Call `https://openlibrary.org/search.json?title={title}&author={author}&limit=1` (URL-encode the title and author).
+2. From `docs[0]`:
+   - If `cover_i` exists → cover URL = `https://covers.openlibrary.org/b/id/{cover_i}-M.jpg?default=false`
+   - Else if `isbn[0]` exists → cover URL = `https://covers.openlibrary.org/b/isbn/{isbn[0]}-M.jpg?default=false`
+   - Else → set src directly to the Unsplash placeholder: `https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&auto=format&fit=crop&q=80`
+3. Optionally surface to the user (only if the user skipped the relevant questionnaire field):
+   - `docs[0].isbn[0]` as a possible ISBN.
+   - `docs[0].first_sentence[0]` or, by fetching `https://openlibrary.org{docs[0].key}.json`, the `description` field as a **synopsis suggestion** they can accept, edit, or skip.
+
+The `?default=false` is important — it makes Open Library return 404 for missing covers instead of a 1×1 transparent gif, which lets the `onerror` handler in the `<img>` tag swap in the placeholder cleanly.
+
 ### After collecting answers
 
 1. **Open the right file** — `fiction.html` for fiction, `nonfiction.html` for non-fiction.
@@ -32,6 +47,11 @@ When the user says anything like **"enter new book, start questionnaire"**, **"a
    ```html
    <article class="book-card fade-up">
      <div class="book-card-head">
+       <img class="book-cover"
+            src="[cover URL from lookup step]"
+            alt="Cover of [Title] by [Author]"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
        <div class="book-title-block">
          <h2 class="book-title">[Title]</h2>
          <p class="book-author">by [Author]</p>
@@ -42,6 +62,8 @@ When the user says anything like **"enter new book, start questionnaire"**, **"a
      [body — see below]
    </article>
    ```
+
+   If the cover lookup pointed straight at the Unsplash placeholder (no Open Library hit), drop the `onerror` attribute — there's nothing to fall back to. Otherwise always include it.
 
 3. **Status class + label mapping**:
    | User answer | Class | Label |

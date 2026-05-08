@@ -42,10 +42,20 @@
         - Meta line: format (Ebook / Audiobook / Physical) · optional tier
         - Non-fiction uses two blocks: "In Brief" (smaller, muted) + "Joel's Quick Comments"
           ("Joel's Quick Comments" frames the takeaway as Joel's personal read, not the book's thesis)
+        - Cover image: hotlinked from Open Library by ISBN
+            https://covers.openlibrary.org/b/isbn/{ISBN}-M.jpg?default=false
+          The ?default=false makes the cover server return 404 when no cover exists,
+          which triggers the onerror handler to swap in the Unsplash placeholder.
+          If you don't have an ISBN at all, set src directly to the Unsplash URL below.
         ============================================================
 
         <article class="book-card">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://covers.openlibrary.org/b/isbn/[ISBN]-M.jpg?default=false"
+                 alt="Cover of [Book Title] by [Author Name]"
+                 loading="lazy"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
             <div class="book-title-block">
               <h2 class="book-title">[Book Title]</h2>
               <p class="book-author">by [Author Name]</p>
@@ -67,6 +77,11 @@
       <div class="grid">
         <article class="book-card fade-up">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://covers.openlibrary.org/b/isbn/9780310368441-M.jpg?default=false"
+                 alt="Cover of The Expectation Gap by Steve Cuss"
+                 loading="lazy"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
             <div class="book-title-block">
               <h2 class="book-title">The Expectation Gap</h2>
               <p class="book-author">by Steve Cuss</p>
@@ -86,6 +101,11 @@
 
         <article class="book-card fade-up delay-1">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://covers.openlibrary.org/b/isbn/9780525653097-M.jpg?default=false"
+                 alt="Cover of The Ruthless Elimination of Hurry by John Mark Comer"
+                 loading="lazy"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
             <div class="book-title-block">
               <h2 class="book-title">The Ruthless Elimination of Hurry</h2>
               <p class="book-author">by John Mark Comer</p>
@@ -105,6 +125,10 @@
 
         <article class="book-card fade-up delay-2">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80"
+                 alt="Placeholder cover for The Art of Playing the Violin by Jennine Warnack"
+                 loading="lazy">
             <div class="book-title-block">
               <h2 class="book-title">The Art of Playing the Violin</h2>
               <p class="book-author">by Jennine Warnack</p>
@@ -124,6 +148,10 @@
 
         <article class="book-card fade-up delay-3">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80"
+                 alt="Placeholder cover for Spanish Short Stories for Beginners"
+                 loading="lazy">
             <div class="book-title-block">
               <h2 class="book-title">Spanish Short Stories for Beginners</h2>
               <p class="book-author">by Channel Reader & Camila Sanchez</p>
@@ -143,6 +171,11 @@
 
         <article class="book-card fade-up">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://covers.openlibrary.org/b/isbn/9780830810888-M.jpg?default=false"
+                 alt="Cover of Discipleship Essentials by Greg Ogden"
+                 loading="lazy"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
             <div class="book-title-block">
               <h2 class="book-title">Discipleship Essentials</h2>
               <p class="book-author">by Greg Ogden</p>
@@ -162,6 +195,11 @@
 
         <article class="book-card fade-up">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://covers.openlibrary.org/b/isbn/9781514005385-M.jpg?default=false"
+                 alt="Cover of Non-Toxic Masculinity by Zachary Wagner"
+                 loading="lazy"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
             <div class="book-title-block">
               <h2 class="book-title">Non-Toxic Masculinity</h2>
               <p class="book-author">by Zachary Wagner</p>
@@ -181,6 +219,11 @@
 
         <article class="book-card fade-up">
           <div class="book-card-head">
+            <img class="book-cover"
+                 src="https://covers.openlibrary.org/b/isbn/9780310337188-M.jpg?default=false"
+                 alt="Cover of Loveology by John Mark Comer"
+                 loading="lazy"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
             <div class="book-title-block">
               <h2 class="book-title">Loveology</h2>
               <p class="book-author">by John Mark Comer</p>
@@ -204,6 +247,7 @@
   <footer class="footer">
     <div class="container">
       <p>A public reading log by Joel · <a href="https://github.com/Jakayus/ReadingTheseBooks">View on GitHub</a></p>
+      <p class="footer-credit">Book covers via <a href="https://openlibrary.org">Open Library</a> · Placeholder cover photo by <a href="https://unsplash.com/@impatrickt">Patrick Tomasso</a> on <a href="https://unsplash.com/">Unsplash</a>.</p>
     </div>
   </footer>
 
