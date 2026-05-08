@@ -31,7 +31,7 @@ After all answers are collected, look up the book on Open Library to get a cover
 2. From `docs[0]`:
    - If `cover_i` exists → cover URL = `https://covers.openlibrary.org/b/id/{cover_i}-M.jpg?default=false`
    - Else if `isbn[0]` exists → cover URL = `https://covers.openlibrary.org/b/isbn/{isbn[0]}-M.jpg?default=false`
-   - Else → set src directly to the Unsplash placeholder: `https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&auto=format&fit=crop&q=80`
+   - Else → set src directly to the Unsplash placeholder: `https://images.unsplash.com/photo-1568667256531-7d5ac92eaa7a?w=400&auto=format&fit=crop&q=80`
 3. Optionally surface to the user (only if the user skipped the relevant questionnaire field):
    - `docs[0].isbn[0]` as a possible ISBN.
    - `docs[0].first_sentence[0]` or, by fetching `https://openlibrary.org{docs[0].key}.json`, the `description` field as a **synopsis suggestion** they can accept, edit, or skip.
@@ -51,7 +51,7 @@ The `?default=false` is important — it makes Open Library return 404 for missi
             src="[cover URL from lookup step]"
             alt="Cover of [Title] by [Author]"
             loading="lazy"
-            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1568667256531-7d5ac92eaa7a?w=400&amp;auto=format&amp;fit=crop&amp;q=80';">
        <div class="book-title-block">
          <h2 class="book-title">[Title]</h2>
          <p class="book-author">by [Author]</p>
