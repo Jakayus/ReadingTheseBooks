@@ -6,7 +6,7 @@ This repo is a static website (plain HTML/CSS/JS) that publishes some of the boo
 
 ## Adding a New Book
 
-When the user says anything like **"enter new book, start questionnaire"**, **"add a new book"**, **"new book entry"**, or **"let's add a book"**, run through the questionnaire below **one question at a time**, waiting for each answer before asking the next. Do not batch the questions.
+When the user says anything like **"enter new book, start questionnaire"**, **"add a new book"**, **"new book entry"**, or **"let's add a book"**, run through the questionnaire below **one question at a time**, waiting for each answer before asking the next. Do not batch the questions unless the user explicitly opts into batching (e.g., adding a series of books with shared answers).
 
 ### Questionnaire (ask in this order)
 
@@ -17,17 +17,19 @@ When the user says anything like **"enter new book, start questionnaire"**, **"a
    - `Currently Reading` — in progress
    - `Finished` — completed
    - `Up Next` — queued, haven't started yet
+   - `Ongoing Learning` — reference / how-to book read over a long stretch
+   - `Ongoing Workbook` — workbook worked through over time
 5. What **format**? (Ebook / Audiobook / Physical)
 6. Optional **tier**? (must-read / great / good — or skip)
    - Usually only meaningful for Finished books. If the user says "skip" or "none", omit the tier.
-7. **Synopsis** — short summary of what the book is about. The user can type one out, paste from somewhere, or say "skip for now".
-8. **What I Like** — what kept them reading or what stuck with them. Same options: type, paste, or "skip for now".
+7. **Short description** — a couple of sentences on what the book is about. Renders as **In Brief** on non-fiction cards or **Premise** on fiction cards. The user can type one out, paste from somewhere, say `lookup` for a web / Open Library suggestion, or `skip for now`.
+8. **Joel's Quick Comments** — the user's personal take (the one idea that stuck with them, or pace / feel / what worked / what didn't). Type, paste, list, or `skip for now`. For Currently Reading books, use the placeholder line instead (see Card body below).
 
 ### Cover lookup (automatic, after the questionnaire)
 
-After all answers are collected, look up the book on Open Library to get a cover URL:
+After all answers are collected, look up the book to get a cover URL:
 
-1. Call `https://openlibrary.org/search.json?title={title}&author={author}&limit=1` (URL-encode the title and author).
+1. Try `https://openlibrary.org/search.json?title={title}&author={author}&limit=1` (URL-encode the title and author).
 2. From `docs[0]`:
    - If `cover_i` exists → cover URL = `https://covers.openlibrary.org/b/id/{cover_i}-M.jpg?default=false`
    - Else if `isbn[0]` exists → cover URL = `https://covers.openlibrary.org/b/isbn/{isbn[0]}-M.jpg?default=false`
@@ -37,6 +39,8 @@ After all answers are collected, look up the book on Open Library to get a cover
    - `docs[0].first_sentence[0]` or, by fetching `https://openlibrary.org{docs[0].key}.json`, the `description` field as a **synopsis suggestion** they can accept, edit, or skip.
 
 The `?default=false` is important — it makes Open Library return 404 for missing covers instead of a 1×1 transparent gif, which lets the `onerror` handler in the `<img>` tag swap in the placeholder cleanly.
+
+**Sandbox fallback:** Some execution environments block direct calls to `openlibrary.org` from `curl` / `WebFetch`. If the search API isn't reachable, use `WebSearch` to find a publisher / Goodreads / Amazon blurb and grab the ISBN from those results, then build the cover URL by ISBN as above. The browser fetches the cover at page render time, so the URL itself works fine even when the JSON API is blocked from this side.
 
 ### After collecting answers
 
@@ -59,7 +63,7 @@ The `?default=false` is important — it makes Open Library return 404 for missi
        </div>
        <span class="status [status-class]">[Status Label]</span>
      </div>
-     [body — see below]
+     [body — see step 5]
    </article>
    ```
 
@@ -71,35 +75,54 @@ The `?default=false` is important — it makes Open Library return 404 for missi
    | Currently Reading | `status-reading` | `Currently Reading` |
    | Finished | `status-finished` | `Finished` |
    | Up Next | `status-queued` | `Up Next` |
+   | Ongoing Learning | `status-ongoing-learning` | `Ongoing Learning` |
+   | Ongoing Workbook | `status-ongoing-workbook` | `Ongoing Workbook` |
 
 4. **Meta line**:
    - With tier: `<p class="book-meta">Ebook · <span class="tier">must-read</span></p>`
    - Without tier: `<p class="book-meta">Ebook</p>`
 
-5. **Card body** depends on what the user provided:
-   - **Both synopsis and "what I like" skipped** → use a single coming-soon line:
-     ```html
-     <p class="book-coming-soon">Notes coming soon.</p>
-     ```
-     (For `Up Next` books, prefer: `<p class="book-coming-soon">On deck — I'll add notes once I start it.</p>`)
-   - **Synopsis provided, "what I like" skipped** → render synopsis, then "what I like" with placeholder:
-     ```html
-     <div class="book-section">
-       <h4>Synopsis</h4>
-       <p>[synopsis text]</p>
-     </div>
-     <div class="book-section">
-       <h4>What I Like</h4>
-       <p class="book-placeholder">Adding my notes here soon.</p>
-     </div>
-     ```
+5. **Card body** — fiction uses **Premise** + **Joel's Quick Comments**; non-fiction uses **In Brief** + **Joel's Quick Comments** (note: non-fiction's "In Brief" section adds the `book-section--brief` modifier class for muted styling).
+
+   **Fiction body template:**
+   ```html
+   <div class="book-section">
+     <h4>Premise</h4>
+     <p>[short description]</p>
+   </div>
+   <div class="book-section">
+     <h4>Joel's Quick Comments</h4>
+     <p>[Joel's take]</p>
+   </div>
+   ```
+
+   **Non-fiction body template:**
+   ```html
+   <div class="book-section book-section--brief">
+     <h4>In Brief</h4>
+     <p>[short description]</p>
+   </div>
+   <div class="book-section">
+     <h4>Joel's Quick Comments</h4>
+     <p>[Joel's take]</p>
+   </div>
+   ```
+
+   **Variants depending on what's provided:**
+   - **Currently Reading** → fill In Brief / Premise normally, but use a `book-placeholder` line in Joel's Quick Comments:
+     - Non-fiction: `<p class="book-placeholder">Adding my thoughts once I'm done.</p>`
+     - Fiction: `<p class="book-placeholder">Still reading — comments coming once I'm done.</p>`
+   - **Up Next, both fields skipped** → use a single coming-soon line in place of the body sections: `<p class="book-coming-soon">On deck — I'll add notes once I start it.</p>`
+   - **Both fields skipped (other statuses)** → `<p class="book-coming-soon">Notes coming soon.</p>`
    - **Both provided** → render both `<div class="book-section">` blocks fully.
-   - **"What I Like" provided as a list** → use `<ul class="bullet-list"><li>...</li></ul>` instead of `<p>`.
+   - **Joel's Quick Comments as a list** → use `<ul class="bullet-list"><li>...</li></ul>` instead of `<p>`.
 
 6. **Insert the card** in the grid (`<div class="grid">`) at the correct position based on status order:
-   - All `Currently Reading` cards first
-   - Then all `Finished` cards
-   - Then all `Up Next` cards
+   - `Currently Reading` first
+   - then `Ongoing Learning`
+   - then `Ongoing Workbook`
+   - then `Finished`
+   - then `Up Next`
    - Within the same status group, append at the end.
 
 7. **Re-number `delay-N` classes** so the first four cards in the grid have `fade-up`, `fade-up delay-1`, `fade-up delay-2`, `fade-up delay-3`. Cards 5+ keep just `fade-up` (no delay class). This keeps the staggered entrance animation tidy.
@@ -108,9 +131,23 @@ The `?default=false` is important — it makes Open Library return 404 for missi
 
 ---
 
+## Style Notes (Joel's preferences)
+
+- **No em dashes (`—`)** in "In Brief", "Premise", or "Joel's Quick Comments" prose. Use commas, "but", parentheses, or two shorter sentences instead. (Existing cards that use them are fine; just don't introduce new ones.)
+- Keep "In Brief" tight — one or two sentences is the house style.
+
+---
+
 ## Status / Format / Tier Reference
 
-**Status options** — `status-reading` (Currently Reading), `status-finished` (Finished), `status-queued` (Up Next).
+**Status options:**
+| Class | Label | When to use |
+|---|---|---|
+| `status-reading` | Currently Reading | Actively reading |
+| `status-finished` | Finished | Completed |
+| `status-queued` | Up Next | Queued, not started |
+| `status-ongoing-learning` | Ongoing Learning | Reference / how-to book worked through over a long stretch |
+| `status-ongoing-workbook` | Ongoing Workbook | Workbook worked through over time |
 
 **Format options** — `Ebook`, `Audiobook`, `Physical`. Capitalize the first letter.
 
@@ -120,7 +157,22 @@ The `?default=false` is important — it makes Open Library return 404 for missi
 
 ## Updating an Existing Book
 
-If the user wants to change a book's status, add notes, or update a synopsis, locate the `<article class="book-card">` block in the right file, edit it in place, and re-sort the grid if status changed (Currently Reading → Finished → Up Next order).
+If the user wants to change a book's status, add notes, or update a short description, locate the `<article class="book-card">` block in the right file, edit it in place, and re-sort the grid if status changed (see the status order in step 6 above). Renumber `delay-N` classes after any reordering.
+
+---
+
+## Series of Books
+
+If the user adds multiple books from the same series, default to **consolidating them into a single card** (one entry for the whole series) rather than spamming the grid with one card per book. Pattern:
+
+- Title: `[Series Name] (Series)` (e.g., `The Murderbot Diaries (Series)`)
+- Cover: use the first book's cover
+- Status: reflect the most-active state — `Currently Reading` if any are in progress, otherwise `Finished`
+- Tier: the user's overall take on the series, or skip if mid-read
+- Premise / In Brief: a series-level description, with the individual book titles listed in a second `<p>` inside the same section
+- Joel's Quick Comments: a combined comment; mention which book the user is currently on if applicable
+
+A nicer future approach (a horizontal carousel of per-book "slides" within a single card slot) is documented in `NOTES.md` — revisit when there's a second series on the site or when there's bandwidth to do it justice.
 
 ---
 
@@ -130,3 +182,4 @@ If the user wants to change a book's status, add notes, or update a synopsis, lo
 - Shared styling is in `styles.css`. The minimal mobile-nav JS is in `script.js`.
 - The HTML comment template at the top of each grid is the source of truth for the card structure — keep it in sync if the card schema ever changes.
 - Don't introduce frameworks, build steps, or dependencies. Plain HTML/CSS/JS only.
+- Deferred / future features go in `NOTES.md`.
