@@ -123,9 +123,11 @@ The `?default=false` is important — it makes Open Library return 404 for missi
    - then `Ongoing Workbook`
    - then `Finished`
    - then `Up Next`
-   - Within the same status group, append at the end.
+   - Within `Finished`, order by **tier**: `must-read` → `great` → `good` → untiered. Within any other status group, append at the end.
 
-7. **Re-number `delay-N` classes** so the first four cards in the grid have `fade-up`, `fade-up delay-1`, `fade-up delay-2`, `fade-up delay-3`. Cards 5+ keep just `fade-up` (no delay class). This keeps the staggered entrance animation tidy.
+   **Ordering is enforced at runtime by `script.js`.** On page load it sorts the cards in each `.grid` by status (then by tier within Finished) and reassigns the `delay-N` classes, so a card pasted in the wrong spot will still render in the right place. Still author the card in the correct position anyway, so the HTML source stays correct for no-JS visitors and search crawlers.
+
+7. **`delay-N` classes are assigned automatically** by `script.js` (first card none, next three get `delay-1`/`delay-2`/`delay-3`, the rest none), so there's no need to renumber by hand. Just give every new card the base `fade-up` class and the sort pass handles the rest.
 
 8. **Confirm** with the user — show them the snippet you inserted and ask if they want anything tweaked before they commit.
 
@@ -157,7 +159,7 @@ The `?default=false` is important — it makes Open Library return 404 for missi
 
 ## Updating an Existing Book
 
-If the user wants to change a book's status, add notes, or update a short description, locate the `<article class="book-card">` block in the right file, edit it in place, and re-sort the grid if status changed (see the status order in step 6 above). Renumber `delay-N` classes after any reordering.
+If the user wants to change a book's status, add notes, or update a short description, locate the `<article class="book-card">` block in the right file and edit it in place. If the status or tier changed, move the block to the right spot for source correctness (see the order in step 6), but you don't have to be exact or touch `delay-N` classes — `script.js` re-sorts the grid and reassigns the delays on load.
 
 ---
 
